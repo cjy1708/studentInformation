@@ -1,10 +1,12 @@
-#include <stdio.h>
 #include "basic_1.h"
 
-char *studentInformation_PATH ="D:\\Learn\\CProgrammingLanguage\\programming\\CLion experiment\\StudentInformation.txt";
 
 int main() {
-    Student *head;
+    int result = 0;//判断输出结构，即是否有原始数据
+
+    result = weatherCourseInformation() + weatherStuInformation() + weatherTeacherInformation();
+    result = MisjudgmentCase(result);
+
 
     return 0;
 }

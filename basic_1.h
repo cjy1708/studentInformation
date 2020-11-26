@@ -6,6 +6,9 @@
 #define STUDENTINFORMATION_BASIC_1_H
 
 #include <stdlib.h>
+#include <stdio.h>
+
+
 //初始化结构体信息
 typedef struct Tea{
     int Teacher_ID;
@@ -29,12 +32,19 @@ typedef struct Stu{
     char sex;
     int class;
     int course[15];
+    struct Stu *pNext;
 } Student;
 
-extern char *studentInformation_PATH;
+
 //判断是否有内容
-int weatherInformation();
+int weatherStuInformation();
+int weatherCourseInformation();
+int weatherTeacherInformation();
+//判断错误情况
+int MisjudgmentCase(int result);
 //从文件中读出学生信息
-void readInformation();
+Student *readInformation();
+//安全释放程序
+void safeFree(Student *head);
 
 #endif //STUDENTINFORMATION_BASIC_1_H
