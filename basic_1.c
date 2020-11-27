@@ -68,7 +68,6 @@ Student *readInformation(){
     Student *q = NULL;
     FILE *fp = fopen(studentInformation_PATH,"r");
 
-//    fseek(fp,0,SEEK_SET);
     q = (Student *)malloc(sizeof(Student));
     if (q == NULL){
         fclose(fp);
@@ -79,7 +78,7 @@ Student *readInformation(){
     do{
         p = (Student *)malloc(sizeof(Student));
         if (p == NULL){
-            safeFree(head);
+            safeFreeStu(head);
             exit(EXIT_FAILURE);
         }
         fread(p,sizeof(Student),1,fp);
@@ -93,7 +92,7 @@ Student *readInformation(){
 Course *readCourseInformation(){
     Course *courseList = NULL;
     Course *pTemp = NULL;
-    int index = 2;
+    int index = 1;
     FILE *fp = fopen(courseInformation_PATH,"r");
 
     courseList = (Course *)malloc(sizeof(Course));
@@ -102,13 +101,13 @@ Course *readCourseInformation(){
     }
     fread(courseList,sizeof(Course),1,fp);
     do{
-        pTemp = (Course *)realloc(courseList,index * sizeof(Course));
+        pTemp = (Course *)realloc(courseList,(index + 1) * sizeof(Course));
         if (pTemp == NULL){
             safeFreeCour(courseList);
             exit(EXIT_FAILURE);
         }
-        if (fread(pTemp,sizeof(Course),1,fp) != 0){
-            courseList[index++ - 1] = *pTemp;
+        if (fread(pTemp + index - 1,sizeof(Course),1,fp) != 0){
+
         }
     }while (pTemp != NULL);
 
