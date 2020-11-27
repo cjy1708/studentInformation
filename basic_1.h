@@ -44,7 +44,15 @@ int weatherTeacherInformation();
 int MisjudgmentCase(int result);
 //从文件中读出学生信息
 Student *readInformation();
-//安全释放程序
-void safeFree(Student *head);
+
+
+//安全释放学生数据
+void safeFreeStu(Student *head);
+//安全释放课程数据
+void safeFreeCour(Course *courseList);
+//安全释放教师数据
+void safeFreeTea(Teacher *teacherList);
+//安全释放数据
+void safeFreeAll(Course *courseList,Teacher *teacherList,Student *head);
 
 #endif //STUDENTINFORMATION_BASIC_1_H

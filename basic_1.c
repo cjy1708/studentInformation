@@ -66,11 +66,12 @@ Student *readInformation(){
     Student *head = NULL;
     Student *p = NULL;
     Student *q = NULL;
-    FILE *fp = fopen(studentInformation_PATH,"a+");
+    FILE *fp = fopen(studentInformation_PATH,"r");
 
-    fseek(fp,0,SEEK_SET);
+//    fseek(fp,0,SEEK_SET);
     q = (Student *)malloc(sizeof(Student));
     if (q == NULL){
+        fclose(fp);
         exit(EXIT_FAILURE);
     }
     fread(q,sizeof(Student),1,fp);
@@ -84,11 +85,37 @@ Student *readInformation(){
         fread(p,sizeof(Student),1,fp);
         q = q->pNext = p;
     }while (q->pNext != NULL);
+    fclose(fp);
 
     return head;
 }
-//安全释放程序
-void safeFree(Student *head){
+//从文件中读出课程信息
+Course *readCourseInformation(){
+    Course *courseList = NULL;
+    Course *pTemp = NULL;
+    int index = 2;
+    FILE *fp = fopen(courseInformation_PATH,"r");
+
+    courseList = (Course *)malloc(sizeof(Course));
+    if (courseList == NULL){
+        exit(EXIT_FAILURE);
+    }
+    fread(courseList,sizeof(Course),1,fp);
+    do{
+        pTemp = (Course *)realloc(courseList,index * sizeof(Course));
+        if (pTemp == NULL){
+            safeFreeCour(courseList);
+            exit(EXIT_FAILURE);
+        }
+        if (fread(pTemp,sizeof(Course),1,fp) != 0){
+            courseList[index++ - 1] = *pTemp;
+        }
+    }while (pTemp != NULL);
+
+    return courseList;
+}
+//安全释放学生链表
+void safeFreeStu(Student *head){
     Student *p,*q;
     p = head;
 
@@ -97,4 +124,18 @@ void safeFree(Student *head){
         free(p);
         p = q;
     }
+}
+//安全释放课程数据
+void safeFreeCour(Course *courseList){
+    free(courseList);
+}
+//安全释放教师数据
+void safeFreeTea(Teacher *teacherList){
+    free(teacherList);
+}
+//安全释放数据
+void safeFreeAll(Course *courseList,Teacher *teacherList,Student *head){
+    safeFreeCour(courseList);
+    safeFreeTea(teacherList);
+    safeFreeStu(head);
 }
