@@ -7,21 +7,22 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
 
 //初始化结构体信息
 typedef struct Tea{
     int Teacher_ID;
     char name[20];
-    int taughtSubjectsID;
+    unsigned int taughtSubjectsID;
     int teachTime;
-    char title[20];
+    char rank[20];
     int teachClass[10];
 } Teacher;
 
 //课程结构体
 typedef struct Cour{
-    int Course_ID;
+    unsigned int Course_ID;
     char name[20];
 } Course;
 //学生结构体
@@ -42,9 +43,21 @@ int weatherCourseInformation();
 int weatherTeacherInformation();
 //判断错误情况
 int MisjudgmentCase(int result);
+
 //从文件中读出学生信息
 Student *readInformation();
+//从文件中读出课程信息
+Course *readCourseInformation();
+//从文件中读出教师信息
+Teacher *readTeacherInformation();
 
+//登录信息
+int loginIn();
+
+//以ID搜索链表内容
+Student *searchStudent(int ID);
+//以ID搜索教师工号
+Course *searchTeacher(int ID);
 
 //安全释放学生数据
 void safeFreeStu(Student *head);
