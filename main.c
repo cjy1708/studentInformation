@@ -1,4 +1,5 @@
 #include "basic_1.h"
+#include "Concrete_Execution.h"
 
 
 Student *Head = NULL;
@@ -25,7 +26,7 @@ int main() {
         
     }else if(ID < 21000000){
         //Ñ§Éú¶Ë¿Ú
-
+        stuView();
     }
 
     safeFreeAll(CourseList,TeacherList,Head);

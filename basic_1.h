@@ -35,8 +35,8 @@ typedef struct Stu{
     int age;
     char sex;
     int class;
-    int course[15];
-    int teacher[15];
+    int course[16];
+    int teacher[16];
     struct Stu *pNext;
 } Student;
 //管理员结构体

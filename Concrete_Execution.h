@@ -24,5 +24,10 @@ void adminView();
 void showStuInformation(int num);
 //学生选课
 void chooseCourse();
+//修改学生课程信息
+void studentCourse(int *count);
+//检测有无课程信息，有则返回课程ID
+int weatherCour(char *name);
+
 
 #endif //STUDENTINFORMATION_CONCRETE_EXECUTION_H
