@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
+#include <unistd.h>
+
 
 
 //初始化结构体信息
@@ -33,16 +36,21 @@ typedef struct Stu{
     char sex;
     int class;
     int course[15];
+    int teacher[15];
     struct Stu *pNext;
 } Student;
-
+//管理员结构体
+typedef struct Adm {
+    char name[20];
+    char password[16];
+}Account;
 
 //判断是否有内容
 int weatherStuInformation();
 int weatherCourseInformation();
 int weatherTeacherInformation();
 //判断错误情况
-int MisjudgmentCase(int result);
+void MisjudgmentCase(int result);
 
 //从文件中读出学生信息
 Student *readInformation();
@@ -50,14 +58,16 @@ Student *readInformation();
 Course *readCourseInformation();
 //从文件中读出教师信息
 Teacher *readTeacherInformation();
+//读取管理员信息,无信息、账号密码不正确返回0，正确返回1
+int weatherAdministrator(char *account,char *password);
 
-//登录信息
+//登录信息,成功就返回账号，失败返回0；管理员返回1；
 int loginIn();
 
-//以ID搜索链表内容
+//以ID搜索学生链表内容
 Student *searchStudent(int ID);
 //以ID搜索教师工号
-Course *searchTeacher(int ID);
+Teacher *searchTeacher(int ID);
 
 //安全释放学生数据
 void safeFreeStu(Student *head);

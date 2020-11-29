@@ -11,6 +11,8 @@ char *account_PATH = "D:\\Learn\\CProgrammingLanguage\\programming\\CLion experi
 extern Student *Head;
 extern Course *CourseList;
 extern Teacher *TeacherList;
+extern Teacher *pNowTea;
+extern Student *pNowStu;
 //判断是否有内容
 int weatherStuInformation(){
     FILE *fp = fopen(studentInformation_PATH,"a+");
@@ -48,45 +50,42 @@ int weatherTeacherInformation(){
     else return 0;
 }
 //判断错误情况
-int MisjudgmentCase(int result){
+void MisjudgmentCase(int result){
     printf("加载中，请稍后");
     if(!result) {
         printf("数据完整，加载成功！");
         Head = readInformation();
-        teacherList = readTeacherInformation();
-        courseList = readCourseInformation();
-        return 0;
+        TeacherList = readTeacherInformation();
+        CourseList = readCourseInformation();
     }
     else if (result == -1){
         printf("无学生数据！\n");
-        teacherList = readTeacherInformation();
-        courseList = readCourseInformation();
+        TeacherList = readTeacherInformation();
+        CourseList = readCourseInformation();
     }
     else if (result == -2){
         printf("无课程数据！\n");
         Head = readInformation();
-        teacherList = readTeacherInformation();
+        TeacherList = readTeacherInformation();
     }
     else if (result == -4){
         printf("无教师数据！\n");
         Head = readInformation();
-        courseList = readCourseInformation();
+        CourseList = readCourseInformation();
     }
     else if (result == -3){
         printf("无学生和课程数据！\n");
-        teacherList = readTeacherInformation();
+        TeacherList = readTeacherInformation();
     }
     else if (result == -5){
         printf("无学生和教师数据！\n");
-        courseList = readCourseInformation();
+        CourseList = readCourseInformation();
     }
     else if (result == -6){
         printf("无课程和教师数据！\n");
         Head = readInformation();
     }
     else if (result == -7) printf("无学生、课程和教师数据！\n");
-
-    return 1;
 }
 //从文件中读出学生信息
 Student *readInformation(){
@@ -146,7 +145,7 @@ Course *readCourseInformation(){
 
     return courseList;
 }
-//从文件中读出课程信息
+//从文件中读出教师信息
 Teacher *readTeacherInformation(){
     Teacher *TeacherList = NULL;
     Teacher *pTemp = NULL;
@@ -178,34 +177,66 @@ Teacher *readTeacherInformation(){
 
     return TeacherList;
 }
+//读取管理员信息,无信息、账号密码不正确返回0，正确返回1
+int weatherAdministrator(char *account,char *password){
+    Account *p;
+    FILE *fp = fopen(account_PATH,"r");
 
-//登录信息,成功就返回账号，失败返回0；
+    if (fp == NULL){
+        printf("账号密码错误，程序结束\n");
+        sleep(3);
+        return 0;
+    }else{
+        while(1){
+            fread(p,sizeof(Account),1,fp);
+            if(strcmp(p->name,account) == 0 && strcmp(p->password,password) == 0){
+                printf("当前管理员已登录\n");
+                fclose(fp);
+                return 1;
+            }
+            if(p == NULL)
+                break;
+        }
+        fclose(fp);
+        printf("账号密码错误，程序结束\n");
+        sleep(3);
+        return 0;
+    }
+}
+
+//登录信息,成功就返回账号，失败返回0；管理员返回1；
 int loginIn(){
     int ID = 0;
     char account[20] = {};
     char tryPassword[16] = {};
 
     printf("请输入账号或姓名：");
+    fflush(stdin);
     scanf("%s",account);
     printf("请输入密码：");
+    fflush(stdin);
     scanf("%s",tryPassword);
     if(isdigit(account[0]) && isdigit(account[6])){
         ID = atoi(account);
-        if (ID <= 20000000 && searchTeacher(ID) != NULL)
-            return ID;
-        else if (ID > 20000000 && ID < 21000000 && searchStudent(ID) != NULL){
+        if (ID <= 20000000 && (pNowTea = searchTeacher(ID)) != NULL){
+            printf("欢迎%s老师登录",pNowTea->name);
             return ID;
         }
+        else if (ID > 20000000 && ID < 21000000 && (pNowStu = searchStudent(ID)) != NULL){
+            printf("欢迎%s同学登录",pNowStu->name);
+            return ID;
+        }
+        printf("账号密码错误，程序结束\n");
+        sleep(3);
+        return 0;
     }else{
-
+        return weatherAdministrator(account,tryPassword);
     }
-
-    return 0;
 }
 
 //以ID搜索链表内容
 Student *searchStudent(int ID){
-    Student *p = head;
+    Student *p = Head;
     Student *q = NULL;
 
     while(p != NULL){
@@ -218,9 +249,15 @@ Student *searchStudent(int ID){
     return NULL;
 }
 //以ID搜索教师工号
-Course *searchTeacher(int ID){
-
+Teacher *searchTeacher(int ID){
+    for(int i = 0;TeacherList[i].Teacher_ID != 0;i++){
+        if(TeacherList[i].Teacher_ID == ID){
+            return &TeacherList[i];
+        }
+    }
+    return NULL;
 }
+
 
 //安全释放学生链表
 void safeFreeStu(Student *head){
