@@ -36,6 +36,8 @@ int weatherCour(char *name);
 void showTeaInformation();
 //查询相同课程的学生,有则pNowStu为刚开始相同的学生
 void sameQueryCourse();
+//判断班级
+void judgeClass();
 
 
 #endif //STUDENTINFORMATION_CONCRETE_EXECUTION_H

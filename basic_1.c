@@ -15,7 +15,7 @@ extern Teacher *pNowTea;
 extern Student *pNowStu;
 //判断是否有内容
 int weatherStuInformation(){
-    FILE *fp = fopen(studentInformation_PATH,"a+");
+    FILE *fp = fopen(studentInformation_PATH,"ab");
 
     fseek(fp,0,SEEK_SET);
     Student text = {.ID = 0};
@@ -27,7 +27,7 @@ int weatherStuInformation(){
 }
 
 int weatherCourseInformation(){
-    FILE *fp = fopen(courseInformation_PATH,"a+");
+    FILE *fp = fopen(courseInformation_PATH,"ab");
 
     fseek(fp,0,SEEK_SET);
     Course text = {.Course_ID = 0};
@@ -39,7 +39,7 @@ int weatherCourseInformation(){
 }
 
 int weatherTeacherInformation(){
-    FILE *fp = fopen(teacherInformation_PATH,"a+");
+    FILE *fp = fopen(teacherInformation_PATH,"ab");
 
     fseek(fp,0,SEEK_SET);
     Teacher text = {.Teacher_ID = 0};
@@ -92,7 +92,7 @@ Student *readInformation(){
     Student *head = NULL;
     Student *p = NULL;
     Student *q = NULL;
-    FILE *fp = fopen(studentInformation_PATH,"r");
+    FILE *fp = fopen(studentInformation_PATH,"rb");
 
     q = (Student *)malloc(sizeof(Student));
     if (q == NULL){
@@ -120,7 +120,7 @@ Course *readCourseInformation(){
     Course *pTemp = NULL;
     Course temp;
     int index = 1;
-    FILE *fp = fopen(courseInformation_PATH,"r");
+    FILE *fp = fopen(courseInformation_PATH,"rb");
 
     courseList = (Course *)malloc(sizeof(Course));
     if (courseList == NULL){
@@ -147,11 +147,10 @@ Course *readCourseInformation(){
 }
 //从文件中读出教师信息
 Teacher *readTeacherInformation(){
-    Teacher *TeacherList = NULL;
     Teacher *pTemp = NULL;
     Teacher temp;
     int index = 1;
-    FILE *fp = fopen(teacherInformation_PATH,"r");
+    FILE *fp = fopen(teacherInformation_PATH,"rb");
 
     TeacherList = (Teacher *)malloc(sizeof(Course));
     if (TeacherList == NULL){
@@ -179,7 +178,8 @@ Teacher *readTeacherInformation(){
 }
 //读取管理员信息,无信息、账号密码不正确返回0，正确返回1
 int weatherAdministrator(char *account,char *password){
-    Account *p;
+    Account wayForPoint;
+    Account *p = &wayForPoint;
     FILE *fp = fopen(account_PATH,"rb");
 
     if (fp == NULL){
@@ -206,7 +206,7 @@ int weatherAdministrator(char *account,char *password){
 
 //登录信息,成功就返回账号，失败返回0；管理员返回1；
 int loginIn(){
-    int ID = 0;
+    int ID;
     char account[20] = {};
     char tryPassword[16] = {};
 
@@ -259,13 +259,12 @@ Teacher *searchTeacher(int ID){
 }
 //以课程ID搜索课程名称
 Course *searchCourse(unsigned int ID){
-    Course *p = NULL;
-
     for (int i = 0; (CourseList + i)->Course_ID != 0; i++) {
         if ((CourseList + i)->Course_ID == ID){
             return (CourseList + i);
         }
     }
+    return NULL;
 }
 
 

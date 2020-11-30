@@ -46,6 +46,7 @@ void teacher(){
                     pNowStu = Head;
                     while(pNowStu != NULL){
                         sameQueryCourse(); //使得pNowStu为刚开始的同一课程
+                        judgeClass();
                         showStuInformation(99);
                         getchar();
                         getchar();
@@ -103,7 +104,16 @@ int teaView_2(){
     return choice;
 }
 int teaView_3(){
-    printf("")
+    int targetClass = 0;
+
+    printf("请输入要修改的班级：");
+    fflush(stdin);
+    scanf("%d",&targetClass);
+    targetClass = targetClass * 100 +1;
+    pNowStu = searchStudent(targetClass);
+    if(pNowStu == NULL){
+        printf
+    }
 }
 int teaView_4(){
 
@@ -132,6 +142,7 @@ void showStuInformation(int num){
                 count++;
             }else{
                 printf("共有%d条记录\n",count);
+                pNowStu = p;
             }
         }
     }
@@ -235,7 +246,7 @@ int weatherCour(char *name){
             if(strcmp((CourseList + i)->name,name) != 0){
                 both_1 = 0;
             }else{
-                ID = (CourseList + i)->Course_ID;
+                ID = (int )(CourseList + i)->Course_ID;
                 both_1 = ID;
                 break;
             }
@@ -281,4 +292,15 @@ void sameQueryCourse(){
     if(p == NULL){
         pNowStu = p;
     }
+}
+//判断班级
+void judgeClass(){
+    int integer;
+    int remainder;
+
+    //获取原始数据
+    integer = pNowStu->ID / 100;
+    remainder = integer % 100;
+
+    printf("\n当前班级为%3d班,成员名单如下：\n",remainder);
 }
