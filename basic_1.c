@@ -7,7 +7,7 @@
 char *studentInformation_PATH = "D:\\Learn\\CProgrammingLanguage\\programming\\CLion experiment\\StudentInformation.txt";
 char *teacherInformation_PATH = "D:\\Learn\\CProgrammingLanguage\\programming\\CLion experiment\\TeacherInformation.txt";
 char *courseInformation_PATH = "D:\\Learn\\CProgrammingLanguage\\programming\\CLion experiment\\CourseInformation.txt";
-char *account_PATH = "D:\\Learn\\CProgrammingLanguage\\programming\\CLion experiment\\Account.txt";
+char *account_PATH = "D:\\Learn\\CProgrammingLanguage\\programming\\CLion experiment\\Information\\Administrator.bat";
 extern Student *Head;
 extern Course *CourseList;
 extern Teacher *TeacherList;
@@ -180,7 +180,7 @@ Teacher *readTeacherInformation(){
 //读取管理员信息,无信息、账号密码不正确返回0，正确返回1
 int weatherAdministrator(char *account,char *password){
     Account *p;
-    FILE *fp = fopen(account_PATH,"r");
+    FILE *fp = fopen(account_PATH,"rb");
 
     if (fp == NULL){
         printf("账号密码错误，程序结束\n");
@@ -226,7 +226,7 @@ int loginIn(){
             printf("欢迎%s同学登录",pNowStu->name);
             return ID;
         }
-        printf("账号密码错误，程序结束\n");
+        printf("账号密码错误，程序在3秒后结束\n");
         sleep(3);
         return 0;
     }else{
@@ -234,7 +234,7 @@ int loginIn(){
     }
 }
 
-//以ID搜索链表内容
+//以学生ID搜索链表内容
 Student *searchStudent(int ID){
     Student *p = Head;
     Student *q = NULL;
@@ -248,7 +248,7 @@ Student *searchStudent(int ID){
     }
     return NULL;
 }
-//以ID搜索教师工号
+//以教师ID搜索教师工号
 Teacher *searchTeacher(int ID){
     for(int i = 0;TeacherList[i].Teacher_ID != 0;i++){
         if(TeacherList[i].Teacher_ID == ID){
@@ -257,6 +257,17 @@ Teacher *searchTeacher(int ID){
     }
     return NULL;
 }
+//以课程ID搜索课程名称
+Course *searchCourse(unsigned int ID){
+    Course *p = NULL;
+
+    for (int i = 0; (CourseList + i)->Course_ID != 0; i++) {
+        if ((CourseList + i)->Course_ID == ID){
+            return (CourseList + i);
+        }
+    }
+}
+
 
 
 //安全释放学生链表

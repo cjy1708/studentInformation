@@ -64,10 +64,13 @@ int weatherAdministrator(char *account,char *password);
 //登录信息,成功就返回账号，失败返回0；管理员返回1；
 int loginIn();
 
-//以ID搜索学生链表内容
+//以学生ID搜索学生链表内容
 Student *searchStudent(int ID);
-//以ID搜索教师工号
+//以教师ID搜索教师
 Teacher *searchTeacher(int ID);
+//以课程ID搜索课程名称
+Course *searchCourse(unsigned int ID);
+
 
 //安全释放学生数据
 void safeFreeStu(Student *head);

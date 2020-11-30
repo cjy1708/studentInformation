@@ -10,12 +10,56 @@ extern Teacher *TeacherList;
 extern Teacher *pNowTea;
 extern Student *pNowStu;
 
+//
 void student(){
+    int choice = 0;
 
+    while((choice = stuView()) != 3) {
+
+        if (choice == 1) {
+            showStuInformation(1);
+            getchar();
+            getchar();
+        } else if (choice == 2) {
+            chooseCourse();
+            getchar();
+            getchar();
+        }else {
+            printf("输入错误，请重新输入！\n");
+        }
+    }
 }
 //教师看见的
 void teacher(){
+    int choice_1 = 0;
+    int choice_2 = 0;
 
+    while ((choice_1 = teaView_1()) != 3){
+        if (choice_1 == 1){
+            while ((choice_2 = teaView_2()) != 3){
+                if(choice_2 == 1){
+                    showTeaInformation();
+                    getchar();
+                    getchar();
+                }else if(choice_2 == 2){
+                    printf("当前已教班级名单：\n");
+                    pNowStu = Head;
+                    while(pNowStu != NULL){
+                        sameQueryCourse(); //使得pNowStu为刚开始的同一课程
+                        showStuInformation(99);
+                        getchar();
+                        getchar();
+                    }
+                }else{
+                    printf("输入错误，请重新输入");
+                }
+            }
+        }else if (choice_1 == 2){
+
+        }else{
+            printf("输入错误，请重新输入");
+        }
+    }
 }
 //管理员看见的
 void administrator(){
@@ -23,32 +67,48 @@ void administrator(){
 }
 
 //学生端界面
-void stuView(){
+int stuView(){
     int choice_1 = 0;
-    for(;choice_1 != 3;){
-        printf("1.查询\n"
-               "2.选课\n"
-               "3.退出\n"
-               "请输入你的选择：");
-        fflush(stdin);
-        scanf("%d", &choice_1);
-        if (choice_1 == 1){
-            showStuInformation(1);
-            getchar();
-            getchar();
-        }else if(choice_1 == 2){
-            chooseCourse();
-        }else if(choice_1 == 3){
-            break;
-        }else{
-            printf("输入错误，请重新输入！\n");
-        }
-    }
+    printf("1.查询\n"
+           "2.选课\n"
+           "3.退出\n"
+           "请输入你的选择：");
+    fflush(stdin);
+    scanf("%d", &choice_1);
+
+    return choice_1;
 }
 //教师端界面
-void teaView(){
+int teaView_1(){
+    int choice = 0;
+
+    printf("1.查询\n"
+           "2.修改所教班级成员\n"
+           "3.退出\n"
+           "请输入你的选择：");
+    fflush(stdin);
+    scanf("%d",&choice);
+
+    return choice;
+}
+int teaView_2(){
+    int choice = 0;
+
+    printf("1.查询个人信息\n"
+           "2.查询所教班级名单\n"
+           "3.返回主菜单\n");
+    fflush(stdin);
+    scanf("%d",&choice);
+
+    return choice;
+}
+int teaView_3(){
+    printf("")
+}
+int teaView_4(){
 
 }
+
 //管理员界面
 void adminView(){
 
@@ -128,8 +188,6 @@ void chooseCourse(){
     }else if(count == 15){
         printf("选课已达最大上限，无法选课\n");
     }
-    getchar();
-    getchar();
 }
 //修改学生课程信息
 void studentCourse(int *count){
@@ -148,7 +206,7 @@ void studentCourse(int *count){
     getchar();
     getchar();
 }
-//检测有无课程信息,有则返回课程ID
+//用名字或ID检测有无课程信息,有则返回课程ID
 int weatherCour(char *name){
     int both_1;
     int both_2;
@@ -192,4 +250,35 @@ int weatherCour(char *name){
         }
     }
     return both_2 * both_1;
+}
+
+//查询教师个人信息
+void showTeaInformation(){
+    printf("教师工号     姓名     所教学科\n");
+    printf("%-9d%-20s%-20s\n",pNowTea->Teacher_ID,pNowTea->name,searchCourse(pNowTea->taughtSubjectsID)->name);
+    printf("职称      教龄");
+    printf("%-20s%3d\n",pNowTea->rank,pNowTea->teachTime);
+}
+//查询相同课程的学生,有则pNowStu为刚开始相同的学生
+void sameQueryCourse(){
+    int courID = pNowTea->taughtSubjectsID;
+    Student *p = pNowStu;
+    Student *q;
+
+    while(p != NULL){
+        for(int i = 0;i < 16;i++) {
+            if (p->course[i] == courID) {
+                pNowStu = p;
+                break;
+            }
+        }
+        if(pNowStu == p){
+            break;
+        }
+        q = p->pNext;
+        p = q;
+    }
+    if(p == NULL){
+        pNowStu = p;
+    }
 }
