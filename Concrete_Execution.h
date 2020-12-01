@@ -39,5 +39,7 @@ void sameQueryCourse();
 //判断班级
 void judgeClass();
 
+//对教师的第二层菜单判断并开始相应函数
+void changeClassmate(int choice_2);
 
 #endif //STUDENTINFORMATION_CONCRETE_EXECUTION_H

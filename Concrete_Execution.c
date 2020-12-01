@@ -56,7 +56,15 @@ void teacher(){
                 }
             }
         }else if (choice_1 == 2){
-
+            if (teaView_3() == 1){
+                printf("班级成员名单为：\n");
+                showStuInformation(99);
+                changeClassmate(teaView_4());
+            }else{
+                printf("输入回车键返回上一层菜单");
+                getchar();
+                getchar();
+            }
         }else{
             printf("输入错误，请重新输入");
         }
@@ -106,17 +114,51 @@ int teaView_2(){
 int teaView_3(){
     int targetClass = 0;
 
-    printf("请输入要修改的班级：");
+    printf("请输入要修改的班级：(年级班级  201708）");
     fflush(stdin);
     scanf("%d",&targetClass);
     targetClass = targetClass * 100 +1;
     pNowStu = searchStudent(targetClass);
     if(pNowStu == NULL){
-        printf
+        printf("无当前班级数据！\n");
+        return 0;
+    }else{
+        for(int i = 0;pNowStu->teacher[i] != 0;i++){
+            if (pNowStu->teacher[i] == pNowTea->Teacher_ID){
+                printf("数据合法\n");
+                return 1;
+            }
+        }
+        return 0;
     }
 }
 int teaView_4(){
+    int choice;
 
+    printf("1.修改\n"
+           "2.删除\n"
+           "3.增添\n"
+           "4.返回上一层\n");
+    fflush(stdin);
+    scanf("%d",&choice);
+
+    return choice;
+}
+//对教师的第二层菜单判断并开始相应函数
+void changeClassmate(int choice_2){
+    if (choice_2 == 1){
+
+    }else if (choice_2 == 2){
+
+    }else if (choice_2 == 3){
+
+    }else if (choice_2 == 4){
+
+    }else {
+        printf("输入错误，"
+               "请重新输入！\n");
+        changeClassmate(teaView_4());
+    }
 }
 
 //管理员界面
