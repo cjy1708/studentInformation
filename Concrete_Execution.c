@@ -1,16 +1,28 @@
 //
 // Created by 1708cjy on 2020/11/29.
 //
-//å­¦ç”Ÿçœ‹å¾—è§çš„
+//Ñ§Éú¿´µÃ¼ûµÄ
 #include "Concrete_Execution.h"
-#include "basic_1.h"
+
 extern Student *Head;
 extern Course *CourseList;
 extern Teacher *TeacherList;
 extern Teacher *pNowTea;
 extern Student *pNowStu;
+extern Student *pPastStu;
 
-//
+//ÅĞ¶ÏÊäÈëµÄÊÇÊı×Ö»¹ÊÇ×Ö·û´®£¬×Ö·û´®²»±ä ·µ»ØÖµÎª0£¬Êı×Ö·µ»ØÕûĞÍ
+int dealID(char *ID){
+    int digitalID;
+
+    if (isdigit(ID[0]) == 1 && isdigit(ID[6]) == 1) {
+        digitalID = atoi(ID);
+        return digitalID;
+    } else {
+        return 0;
+    }
+}
+//Ñ§Éú¿´¼ûµÄ
 void student(){
     int choice = 0;
 
@@ -25,11 +37,11 @@ void student(){
             getchar();
             getchar();
         }else {
-            printf("è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼\n");
+            printf("ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë£¡\n");
         }
     }
 }
-//æ•™å¸ˆçœ‹è§çš„
+//½ÌÊ¦¿´¼ûµÄ
 void teacher(){
     int choice_1 = 0;
     int choice_2 = 0;
@@ -42,59 +54,62 @@ void teacher(){
                     getchar();
                     getchar();
                 }else if(choice_2 == 2){
-                    printf("å½“å‰å·²æ•™ç­çº§åå•ï¼š\n");
+                    printf("µ±Ç°ÒÑ½Ì°à¼¶Ãûµ¥£º\n");
                     pNowStu = Head;
                     while(pNowStu != NULL){
-                        sameQueryCourse(); //ä½¿å¾—pNowStuä¸ºåˆšå¼€å§‹çš„åŒä¸€è¯¾ç¨‹
+                        sameQueryCourse(); //Ê¹µÃpNowStuÎª¸Õ¿ªÊ¼µÄÍ¬Ò»¿Î³ÌµÄÑ§Éú
                         judgeClass();
                         showStuInformation(99);
                         getchar();
                         getchar();
                     }
                 }else{
-                    printf("è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥");
+                    printf("ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë");
                 }
             }
-        }else if (choice_1 == 2){
-            if (teaView_3() == 1){
-                printf("ç­çº§æˆå‘˜åå•ä¸ºï¼š\n");
-                showStuInformation(99);
-                changeClassmate(teaView_4());
-            }else{
-                printf("è¾“å…¥å›è½¦é”®è¿”å›ä¸Šä¸€å±‚èœå•");
-                getchar();
-                getchar();
+        }else if (choice_1 == 2) {
+            while(1) {
+                if (teaView_3() == 1) {
+                    printf("°à¼¶³ÉÔ±Ãûµ¥Îª£º\n");
+                    showStuInformation(99);
+                    changeClassmate(teaView_4());
+                } else {
+                    printf("ÊäÈë»Ø³µ¼ü·µ»ØÉÏÒ»²ã²Ëµ¥\n");
+                    getchar();
+                    getchar();
+                    break;
+                }
             }
         }else{
-            printf("è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥");
+            printf("ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë\n");
         }
     }
 }
-//ç®¡ç†å‘˜çœ‹è§çš„
+//¹ÜÀíÔ±
 void administrator(){
 
 }
 
-//å­¦ç”Ÿç«¯ç•Œé¢
+//Ñ§Éú¶Ë½çÃæ
 int stuView(){
     int choice_1 = 0;
-    printf("1.æŸ¥è¯¢\n"
-           "2.é€‰è¯¾\n"
-           "3.é€€å‡º\n"
-           "è¯·è¾“å…¥ä½ çš„é€‰æ‹©ï¼š");
+    printf("1.²éÑ¯\n"
+           "2.Ñ¡¿Î\n"
+           "3.ÍË³ö\n"
+           "ÇëÊäÈëÄãµÄÑ¡Ôñ£º");
     fflush(stdin);
     scanf("%d", &choice_1);
 
     return choice_1;
 }
-//æ•™å¸ˆç«¯ç•Œé¢
+//½ÌÊ¦¶Ë½çÃæ
 int teaView_1(){
     int choice = 0;
 
-    printf("1.æŸ¥è¯¢\n"
-           "2.ä¿®æ”¹æ‰€æ•™ç­çº§æˆå‘˜\n"
-           "3.é€€å‡º\n"
-           "è¯·è¾“å…¥ä½ çš„é€‰æ‹©ï¼š");
+    printf("1.²éÑ¯\n"
+           "2.ĞŞ¸ÄËù½Ì°à¼¶³ÉÔ±\n"
+           "3.ÍË³ö\n"
+           "ÇëÊäÈëÄãµÄÑ¡Ôñ£º");
     fflush(stdin);
     scanf("%d",&choice);
 
@@ -103,77 +118,104 @@ int teaView_1(){
 int teaView_2(){
     int choice = 0;
 
-    printf("1.æŸ¥è¯¢ä¸ªäººä¿¡æ¯\n"
-           "2.æŸ¥è¯¢æ‰€æ•™ç­çº§åå•\n"
-           "3.è¿”å›ä¸»èœå•\n");
+    printf("1.²éÑ¯¸öÈËĞÅÏ¢\n"
+           "2.²éÑ¯Ëù½Ì°à¼¶Ãûµ¥\n"
+           "3.·µ»ØÖ÷²Ëµ¥\n");
     fflush(stdin);
     scanf("%d",&choice);
 
     return choice;
 }
+//ÅĞ¶ÏÊÇ·ñÎª×Ô¼ºËù½Ì°à¼¶£¬ÊÇÔò·µ»Ø1£¬·ñÔò·µ»Ø0
 int teaView_3(){
     int targetClass = 0;
 
-    printf("è¯·è¾“å…¥è¦ä¿®æ”¹çš„ç­çº§ï¼š(å¹´çº§ç­çº§  201708ï¼‰");
+    printf("ÇëÊäÈëÒªĞŞ¸ÄµÄ°à¼¶£º(Äê¼¶°à¼¶  201708£©\n");
     fflush(stdin);
     scanf("%d",&targetClass);
-    targetClass = targetClass * 100 +1;
+    targetClass = targetClass * 100 + 1;
     pNowStu = searchStudent(targetClass);
     if(pNowStu == NULL){
-        printf("æ— å½“å‰ç­çº§æ•°æ®ï¼\n");
+        printf("ÎŞµ±Ç°°à¼¶Êı¾İ£¡\n");
         return 0;
     }else{
         for(int i = 0;pNowStu->teacher[i] != 0;i++){
             if (pNowStu->teacher[i] == pNowTea->Teacher_ID){
-                printf("æ•°æ®åˆæ³•\n");
+                printf("Êı¾İºÏ·¨£¬¿É¼ÌĞø²Ù×÷\n");
                 return 1;
             }
         }
+        printf("²»ÊÇËù½Ì°à¼¶£¬ÎŞ·¨½øĞĞ²Ù×÷£¡\n");
         return 0;
     }
 }
 int teaView_4(){
     int choice;
 
-    printf("1.ä¿®æ”¹\n"
-           "2.åˆ é™¤\n"
-           "3.å¢æ·»\n"
-           "4.è¿”å›ä¸Šä¸€å±‚\n");
+    printf("1.ĞŞ¸Ä\n"
+           "2.É¾³ı\n"
+           "3.ÔöÌí\n"
+           "4.·µ»ØÉÏÒ»²ã\n");
     fflush(stdin);
     scanf("%d",&choice);
 
     return choice;
 }
-//å¯¹æ•™å¸ˆçš„ç¬¬äºŒå±‚èœå•åˆ¤æ–­å¹¶å¼€å§‹ç›¸åº”å‡½æ•°
+//¶Ô½ÌÊ¦µÄµÚ¶ş²ã²Ëµ¥ÅĞ¶Ï²¢¿ªÊ¼ÏàÓ¦º¯Êı
 void changeClassmate(int choice_2){
     if (choice_2 == 1){
-
+        changeTargetStuInformation();
     }else if (choice_2 == 2){
-
+        deleteStudentInformation();
     }else if (choice_2 == 3){
-
+        addStuInformation();
     }else if (choice_2 == 4){
-
+        printf("°à¼¶Ô¤ÀÀ½áÊø\n");
     }else {
-        printf("è¾“å…¥é”™è¯¯ï¼Œ"
-               "è¯·é‡æ–°è¾“å…¥ï¼\n");
+        printf("ÊäÈë´íÎó£¬"
+               "ÇëÖØĞÂÊäÈë£¡\n");
         changeClassmate(teaView_4());
     }
 }
 
-//ç®¡ç†å‘˜ç•Œé¢
-void adminView(){
+//¹ÜÀíÔ±½çÃæ
+int adminView_main() {
+    int choice;
 
+    printf("1.²éÑ¯\n"
+           "2.ĞŞ¸Ä\n"
+           "3.ÍË³ö\n");
+    fflush(stdin);
+    scanf("%d",&choice);
+
+    return choice;
 }
+int adminView_object() {
+    int object;
 
-//æ˜¾ç¤ºå­¦ç”Ÿä¿¡æ¯
+    printf("1.Ñ§Éú\n"
+           "2.°à¼¶\n"
+           "3.½ÌÊ¦\n"
+           "4.¿Î³Ì\n"
+           "5.·µ»ØÉÏÒ»²ã²Ëµ¥\n");
+    fflush(stdin);
+    scanf("%d",&object);
+
+    return object;
+}
+void adminView_query(Student *pStu,Teacher *pTea,Course *pCour) {
+    if (pStu != NULL) {
+
+    }
+}
+//ÏÔÊ¾Ñ§ÉúĞÅÏ¢
 void showStuInformation(int num){
     int count = 0;
     Student *p = pNowStu;
     Student *q = NULL;
 
     for(int i = 0;i < num;i++){
-        printf("å­¦å·      å§“å       å¹´é¾„   æ€§åˆ«   ç­çº§\n");
+        printf("Ñ§ºÅ      ĞÕÃû       ÄêÁä   ĞÔ±ğ   °à¼¶\n");
         printf("%d  %-20s %d  %c  %d\n", pNowStu->ID, pNowStu->name, pNowStu->age, pNowStu->sex, pNowStu->class);
         count++;
         if(num > 1){
@@ -183,29 +225,34 @@ void showStuInformation(int num){
                 printf("%d  %-20s %d  %c  %d\n", p->ID, p->name, p->age, p->sex, p->class);
                 count++;
             }else{
-                printf("å…±æœ‰%dæ¡è®°å½•\n",count);
+                printf("¹²ÓĞ%dÌõ¼ÇÂ¼\n",count);
                 pNowStu = p;
             }
         }
     }
 }
 
-//å­¦ç”Ÿé€‰è¯¾
+//Ñ§ÉúÑ¡¿Î
 void chooseCourse(){
     int count;
     int totalCourse;
     char choose;
-    printf("å½“å‰å·²é€‰ï¼š\n");
+
+    printf("µ±Ç°ÒÑÑ¡£º\n");
     for(count = 0;pNowStu->course[count] != 0;count++){
         for(int j = 0;(CourseList+j)->Course_ID != 0;j++){
             if(pNowStu->course[count] == (CourseList+j)->Course_ID){
                 printf("%-8d%20s\t",(CourseList+j)->Course_ID,(CourseList+j)->name);
-                printf("%s\n",searchTeacher(pNowStu->teacher[count])->name);
+                if (pNowStu->teacher[count] == -1){
+                    printf("NULL\n");
+                }else{
+                    printf("%s\n",searchTeacher(pNowStu->teacher[count])->name);
+                }
                 break;
             }
         }
     }
-    printf("\nè¿˜å¯é€‰çš„è¯¾ç¨‹åˆ—è¡¨ï¼š\n");
+    printf("\n»¹¿ÉÑ¡µÄ¿Î³ÌÁĞ±í£º\n");
     for(totalCourse = 0;(CourseList+totalCourse)->Course_ID != 0;totalCourse++){
         int judge = 0;
         for(int i = 0;i < count;i++){
@@ -220,46 +267,47 @@ void chooseCourse(){
     }
     if(count < 15){
         if (totalCourse > 15) {
-            printf("å½“å‰å·²é€‰%dé—¨è¯¾,è¿˜å¯é€‰%dé—¨è¯¾\n", count, totalCourse - count);
-            printf("ä¸ºäº†æ‚¨çš„ç”Ÿå‘½ç€æƒ³ï¼Œæœ€å¤šè¿˜å¯é€‰%dé—¨è¯¾\n", 15 - count);
+            printf("µ±Ç°ÒÑÑ¡%dÃÅ¿Î,»¹¿ÉÑ¡%dÃÅ¿Î\n", count, totalCourse - count);
+            printf("ÎªÁËÄúµÄÉúÃü×ÅÏë£¬×î¶à»¹¿ÉÑ¡%dÃÅ¿Î\n", 15 - count);
         } else {
-            printf("å½“å‰å·²é€‰%dé—¨è¯¾,è¿˜å¯é€‰%dé—¨è¯¾\n", count, totalCourse - count);
+            printf("µ±Ç°ÒÑÑ¡%dÃÅ¿Î,»¹¿ÉÑ¡%dÃÅ¿Î\n", count, totalCourse - count);
         }
         while(1) {
-            printf("æ˜¯å¦é€‰è¯¾ï¼ˆy/nï¼‰ï¼š");
+            printf("ÊÇ·ñÑ¡¿Î£¨y/n£©£º");
             fflush(stdin);
-            choose = getchar();
+            scanf("%c",&choose);
             if (choose == 'Y' || choose == 'y') {
-                //ä¿®æ”¹å­¦ç”Ÿè¯¾ç¨‹æ•°æ®
+                //ĞŞ¸ÄÑ§Éú¿Î³ÌÊı¾İ
                 studentCourse(&count);
             } else if (choose == 'N' || choose == 'n') {
                 break;
             } else {
-                printf("è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°é€‰æ‹©ï¼\n");
+                printf("ÊäÈë´íÎó£¬ÇëÖØĞÂÑ¡Ôñ£¡\n");
             }
         }
+        improveStuInformation(pNowStu);
     }else if(count == 15){
-        printf("é€‰è¯¾å·²è¾¾æœ€å¤§ä¸Šé™ï¼Œæ— æ³•é€‰è¯¾\n");
+        printf("Ñ¡¿ÎÒÑ´ï×î´óÉÏÏŞ£¬ÎŞ·¨Ñ¡¿Î\n");
     }
 }
-//ä¿®æ”¹å­¦ç”Ÿè¯¾ç¨‹ä¿¡æ¯
+//ĞŞ¸ÄÑ§Éú¿Î³ÌĞÅÏ¢
 void studentCourse(int *count){
-    int result = 0;
+    int result;
     char name[20] = {};
 
-    printf("è¯·è¾“å…¥è¯¾ç¨‹IDæˆ–åç§°ï¼š");
+    printf("ÇëÊäÈë¿Î³ÌID»òÃû³Æ£º");
     fflush(stdin);
     scanf("%s",name);
     result = weatherCour(name);
     if(result != 0){
         pNowStu->course[(*count)++] = result;
     }else{
-        printf("è¾“å…¥æ— æ•ˆ\n");
+        printf("ÊäÈëÎŞĞ§\n");
     }
     getchar();
     getchar();
 }
-//ç”¨åå­—æˆ–IDæ£€æµ‹æœ‰æ— è¯¾ç¨‹ä¿¡æ¯,æœ‰åˆ™è¿”å›è¯¾ç¨‹ID
+//ÓÃÃû×Ö»òID¼ì²âÓĞÎŞ¿Î³ÌĞÅÏ¢,ÓĞÔò·µ»Ø¿Î³ÌID
 int weatherCour(char *name){
     int both_1;
     int both_2;
@@ -305,14 +353,14 @@ int weatherCour(char *name){
     return both_2 * both_1;
 }
 
-//æŸ¥è¯¢æ•™å¸ˆä¸ªäººä¿¡æ¯
+//²éÑ¯½ÌÊ¦¸öÈËĞÅÏ¢
 void showTeaInformation(){
-    printf("æ•™å¸ˆå·¥å·     å§“å     æ‰€æ•™å­¦ç§‘\n");
+    printf("½ÌÊ¦¹¤ºÅ     ĞÕÃû     Ëù½ÌÑ§¿Æ\n");
     printf("%-9d%-20s%-20s\n",pNowTea->Teacher_ID,pNowTea->name,searchCourse(pNowTea->taughtSubjectsID)->name);
-    printf("èŒç§°      æ•™é¾„");
+    printf("Ö°³Æ      ½ÌÁä");
     printf("%-20s%3d\n",pNowTea->rank,pNowTea->teachTime);
 }
-//æŸ¥è¯¢ç›¸åŒè¯¾ç¨‹çš„å­¦ç”Ÿ,æœ‰åˆ™pNowStuä¸ºåˆšå¼€å§‹ç›¸åŒçš„å­¦ç”Ÿ
+//²éÑ¯ÏàÍ¬¿Î³ÌµÄÑ§Éú,ÓĞÔòpNowStuÎª¸Õ¿ªÊ¼ÏàÍ¬µÄÑ§Éú
 void sameQueryCourse(){
     int courID = pNowTea->taughtSubjectsID;
     Student *p = pNowStu;
@@ -335,14 +383,152 @@ void sameQueryCourse(){
         pNowStu = p;
     }
 }
-//åˆ¤æ–­ç­çº§
+//ÅĞ¶Ï°à¼¶
 void judgeClass(){
     int integer;
     int remainder;
 
-    //è·å–åŸå§‹æ•°æ®
+    //»ñÈ¡Ô­Ê¼Êı¾İ
     integer = pNowStu->ID / 100;
     remainder = integer % 100;
 
-    printf("\nå½“å‰ç­çº§ä¸º%3dç­,æˆå‘˜åå•å¦‚ä¸‹ï¼š\n",remainder);
+    printf("\nµ±Ç°°à¼¶Îª%3d°à,³ÉÔ±Ãûµ¥ÈçÏÂ£º\n",remainder);
+}
+//½ÌÊ¦¶ËÉ¾³ı°à¼¶Ñ§ÉúÁ´±í
+void deleteStudentInformation() {
+    char ID[20] = {};
+    char weatherContinue;
+    Student *pTemp = NULL;
+
+    printf("ÇëÊäÈëÒªÉ¾³ıµÄÑ§ÉúĞÅÏ¢£º\n"
+           "(ÀıÈç£º20170801 »òChenGuanYu)\n");
+    do {
+        scanf("%s", ID);
+        //Ö´ĞĞÍêÖ®ºó£¬pTempÒ»¶¨Ö¸Ïòµ±Ç°IDµÄÑ§Éú
+        if (isdigit(ID[0]) == 1 && isdigit(ID[6]) == 1) {
+            pTemp = searchStudent(atoi(ID));
+        } else {
+            pTemp = searchStuByName(ID);
+        }
+        changeStuLink(pTemp, 0);
+        printf("%sÒÑÉ¾³ı\n", ID);
+        printf("ÊÇ·ñ¼ÌĞø£¨y/n£©£º");
+        fflush(stdin);
+        scanf("%c", &weatherContinue);
+    }while ((weatherContinue == 'y' || weatherContinue == 'Y') && (weatherContinue != 'n' && weatherContinue != 'N'));
+}
+
+//½ÌÊ¦¶ËÔö¼ÓÑ§ÉúĞÅÏ¢
+void addStuInformation(){
+    char ID[20] = {};
+    char weatherContinue;
+    Student *pTest = NULL;
+    Student *pTemp = NULL;
+
+    printf("ÇëÊäÈëÒªÔö¼ÓµÄÑ§ÉúĞÅÏ¢£º\n"
+           "(ÀıÈç£º20170801 »òChenGuanYu)\n");
+    do {
+        scanf("%s", ID);
+        //ÅĞ¶ÏÑ§ÉúĞÅÏ¢ÊÇ·ñ´æÔÚ
+        if (isdigit(ID[0]) == 1 && isdigit(ID[6]) == 1) {
+            pTest = searchStudent(atoi(ID));
+        } else {
+            pTest = searchStuByName(ID);
+        }
+        if (pTest != NULL){
+            printf("ÊäÈëÎŞĞ§£¬Ñ§ÉúĞÅÏ¢ÒÑ´æÔÚ\n");
+        }else{
+            pTemp = searchPlace(ID);
+            changeStuLink(pTemp, 1);
+            printf("ÒÑĞÂÔö%s\n", ID);
+        }
+        printf("ÊÇ·ñ¼ÌĞø£¨y/n£©£º");
+        fflush(stdin);
+        scanf("%c", &weatherContinue);
+    }while ((weatherContinue == 'y' || weatherContinue == 'Y') && (weatherContinue != 'n' && weatherContinue != 'N'));
+}
+
+//¸Ä±äÁ´±í£¬Î´°Ñ°à¼¶Ãûµ¥ÅÅĞò£¬ÄÜ°ÑÁ´±í»¹Á´ÆğÀ´,functionÎªÁã É¾³ı£¬Îª1 Ôö¼Ó
+void changeStuLink(Student *pTemp,int function){
+    if (function == 0) {
+            pPastStu->pNext = pTemp->pNext;
+            free(pTemp);
+    } else if (function == 1) {
+        Student *pAddStu = (Student *) malloc(sizeof(Student));
+        if (pAddStu == NULL) {
+            safeFreeAll(CourseList, TeacherList, Head);
+            exit(EXIT_FAILURE);
+        }
+        //ÊäÈëÑ§ÉúĞÅÏ¢
+        inputStuInformation_ID(pAddStu);
+        inputStuInformation(pAddStu);
+        improveStuInformation(pAddStu);
+        pPastStu->pNext = pAddStu;
+        pAddStu->pNext = pTemp;
+    }
+}
+//¸Ä±äÄ¿±êÑ§ÉúµÄĞÅÏ¢
+void changeTargetStuInformation() {
+    int ID;
+    char choice;
+    char inputID[20] = {};
+    Student *pTemp = NULL;
+
+    printf("ÇëÊäÈëÒªĞŞ¸ÄµÄÑ§ÉúID»òĞÕÃû£º\n"
+           "(20170801 »ò ChenGuanYu)\n");
+    scanf("%s", inputID);
+    ID = dealID(inputID);
+    if (ID == 0) {
+        pTemp = searchStuByName(inputID);
+        if (pTemp == NULL) {
+            printf("ÎŞ·¨Ê¶±ğµ±Ç°ĞÕÃûµÄÑ§ÉúĞÅÏ¢\n");
+        } else {
+            if ((pTemp->ID - pNowStu->ID) > 99) {
+                printf("²»ÊÇËù½Ì°à¼¶µÄÑ§Éú£¬ÎŞ·¨ĞŞ¸ÄÑ§ÉúĞÅÏ¢£¡\n");
+            } else {
+                inputStuInformation(pTemp);
+                improveStuInformation(pTemp);
+            }
+        }
+    } else {
+        pTemp = searchStudent(ID);
+        if (pTemp == NULL) {
+            printf("ÎŞ·¨²éÑ¯µ½µ±Ç°IDµÄÑ§ÉúĞÅÏ¢\n");
+        } else {
+            if ((pTemp->ID - pNowStu->ID) > 99) {
+                printf("²»ÊÇËù½Ì°à¼¶µÄÑ§Éú£¬ÎŞ·¨ĞŞ¸ÄÑ§ÉúĞÅÏ¢£¡\n");
+            } else {
+                inputStuInformation(pTemp);
+                improveStuInformation(pTemp);
+            }
+        }
+    }
+}
+
+//ÕÒµ½¿É²åÈëµÄÎ»ÖÃ,·µ»ØÏÂÒ»¸öÎ»ÖÃ£¬pPastStuÎªÉÏÒ»¸ö,Èô·µ»ØNULLÔòÒÔpPastStuÎªÁ´±íÄ©Î²
+Student *searchPlace(char *ID){
+    int digitalID;
+    Student *p = pNowStu;
+    Student *q;
+
+    if (isdigit(ID[0]) == 1 && isdigit(ID[6]) == 1) {
+        digitalID = atoi(ID);
+        while (p != NULL && (p->ID - pNowStu->ID) < 101){
+            if (p->ID > digitalID){
+                return p;
+            }
+            q = p->pNext;
+            pPastStu = p;
+            p = q;
+        }
+    } else {
+        while (p != NULL && (p->ID - pNowStu->ID) < 100){
+            q = p->pNext;
+            pPastStu = p;
+            p = q;
+        }
+        return p;
+    }
+
+    return NULL;
 }

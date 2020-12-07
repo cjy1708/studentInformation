@@ -6,6 +6,12 @@
 #define STUDENTINFORMATION_CONCRETE_EXECUTION_H
 
 #include <stdio.h>
+#include "basic_1.h"
+
+
+//通用
+//判断输入的是数字还是字符串，字符串不变 返回值为0，数字返回整型
+int dealID(char *ID);
 //学生看得见的
 void student();
 //教师看见的
@@ -18,10 +24,13 @@ int stuView();
 //教师端界面
 int teaView_1();
 int teaView_2();
+//判断是否为自己所教班级，是则返回1，否则返回0
 int teaView_3();
 int teaView_4();
 //管理员界面
-void adminView();
+int adminView_main();
+int adminView_object();
+
 
 //显示学生信息
 void showStuInformation(int num);
@@ -41,5 +50,16 @@ void judgeClass();
 
 //对教师的第二层菜单判断并开始相应函数
 void changeClassmate(int choice_2);
+//教师端删除班级学生链表
+void deleteStudentInformation();
+//教师端增加学生信息
+void addStuInformation();
+//改变链表，未把班级名单排序，能把链表还链起来,function为零 删除，为1 增加
+void changeStuLink(Student *pTemp,int function);
+//改变学生链表的信息
+void changeTargetStuInformation();
+
+//找到可插入的位置
+Student *searchPlace(char *ID);
 
 #endif //STUDENTINFORMATION_CONCRETE_EXECUTION_H

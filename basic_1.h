@@ -70,6 +70,18 @@ Student *searchStudent(int ID);
 Teacher *searchTeacher(int ID);
 //以课程ID搜索课程名称
 Course *searchCourse(unsigned int ID);
+//以学生姓名搜索学生链表内容
+Student *searchStuByName(char *name);
+//以课程ID搜索教师
+Teacher *searchTeaByCourseID(int ID);
+
+
+//输入学生信息
+void inputStuInformation_ID(Student *pAddStudent);
+//输入、修改学生信息
+void inputStuInformation(Student *pAddStudent);
+//完善学生信息
+void improveStuInformation(Student *pTarget);
 
 
 //安全释放学生数据

@@ -7,6 +7,7 @@ Course *CourseList = NULL;
 Teacher *TeacherList = NULL;
 Teacher *pNowTea;
 Student *pNowStu;
+Student *pPastStu = NULL;
 
 int main() {
     int result = 0;//判断输出结构，即是否有原始数据

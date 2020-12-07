@@ -13,6 +13,7 @@ extern Course *CourseList;
 extern Teacher *TeacherList;
 extern Teacher *pNowTea;
 extern Student *pNowStu;
+extern Student *pPastStu;
 //判断是否有内容
 int weatherStuInformation(){
     FILE *fp = fopen(studentInformation_PATH,"ab");
@@ -108,7 +109,8 @@ Student *readInformation(){
             exit(EXIT_FAILURE);
         }
         fread(p,sizeof(Student),1,fp);
-        q = q->pNext = p;
+        q->pNext = p;
+        q = q->pNext;
     }while (q->pNext != NULL);
     fclose(fp);
 
@@ -183,22 +185,20 @@ int weatherAdministrator(char *account,char *password){
     FILE *fp = fopen(account_PATH,"rb");
 
     if (fp == NULL){
-        printf("账号密码错误，程序结束\n");
+        printf("账号密码错误，程序3秒后结束\n");
         sleep(3);
         return 0;
     }else{
-        while(1){
+        do{
             fread(p,sizeof(Account),1,fp);
             if(strcmp(p->name,account) == 0 && strcmp(p->password,password) == 0){
-                printf("当前管理员已登录\n");
+                printf("当前管理员%s已登录\n",p->name);
                 fclose(fp);
                 return 1;
             }
-            if(p == NULL)
-                break;
-        }
+        }while (p != NULL);
         fclose(fp);
-        printf("账号密码错误，程序结束\n");
+        printf("账号密码错误，程序3秒后结束\n");
         sleep(3);
         return 0;
     }
@@ -243,6 +243,7 @@ Student *searchStudent(int ID){
         if(p->ID == ID){
             return p;
         }
+        pPastStu = p;
         q = p->pNext;
         p = q;
     }
@@ -266,7 +267,92 @@ Course *searchCourse(unsigned int ID){
     }
     return NULL;
 }
+//以学生姓名搜索学生链表内容
+Student *searchStuByName(char *name){
+    Student *p = pNowStu;
+    Student *q = NULL;
 
+    while((p->ID - pNowStu->ID) < 100){
+        if(strcmp(p->name,name) == 0){
+            return p;
+        }
+        pPastStu = p;
+        q = p->pNext;
+        p = q;
+    }
+
+    return NULL;
+}
+//以课程ID搜索教师
+Teacher *searchTeaByCourseID(int courseID){
+    for (int i = 0;(TeacherList + i)->taughtSubjectsID != 0;i++){
+        if ((TeacherList + i)->taughtSubjectsID == courseID){
+            return (TeacherList + i);
+        }
+    }
+
+    return NULL;
+}
+
+
+
+
+
+
+
+//输入学生信息
+void inputStuInformation_ID(Student *pAddStudent) {
+    printf("请输入\n学生ID：");
+    fflush(stdin);
+    scanf("%d", &pAddStudent->ID);
+    while (1) {
+        if (searchStudent(pAddStudent->ID) != NULL) {
+            printf("该ID已存在，输入不合法！\n"
+                   "请重新输入:");
+            fflush(stdin);
+            scanf("%d", &pAddStudent->ID);
+        } else {
+            break;
+        }
+    }
+}
+//输入、修改学生信息
+void inputStuInformation(Student *pAddStudent){
+    printf("学生姓名：");
+    fflush(stdin);
+    scanf("%s",pAddStudent->name);
+    printf("学生年龄：");
+    fflush(stdin);
+    scanf("%d",&pAddStudent->age);
+    printf("学生性别：");
+    fflush(stdin);
+    scanf("%c",&pAddStudent->sex);
+    for(int i = 0;i < 16;i++) {
+        pAddStudent->course[i] = 0;
+        pAddStudent->teacher[i] = 0;
+    }
+        pAddStudent->class = 0;
+}
+//完善学生信息
+void improveStuInformation(Student *pTarget){
+    Teacher *pTempTea = NULL;
+
+    //
+    if (pTarget->class == 0){
+        pTarget->class = pTarget->ID /100;
+    }
+    //以课程ID完善教师ID
+    if (pTarget->course[0] != 0){
+        for (int i = 0;pTarget->course[i] != 0;i++){
+            pTempTea = searchTeaByCourseID(pTarget->course[i]);
+            if (pTempTea == NULL){
+                pTarget->teacher[i] = -1;
+            }else{
+                pTarget->teacher[i] = pTempTea->Teacher_ID;
+            }
+        }
+    }
+}
 
 
 //安全释放学生链表
