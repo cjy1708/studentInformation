@@ -76,10 +76,11 @@ Student *searchStuByName(char *name);
 Teacher *searchTeaByCourseID(int ID);
 
 
-//输入学生信息
+//输入学生ID信息
 void inputStuInformation_ID(Student *pAddStudent);
 //输入、修改学生信息
 void inputStuInformation(Student *pAddStudent);
+void inputStuInformationLevelUp(Student *pAddStudent);
 //完善学生信息
 void improveStuInformation(Student *pTarget);
 

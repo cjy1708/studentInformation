@@ -87,7 +87,103 @@ void teacher(){
 }
 //管理员
 void administrator(){
+    int choice_1;
+    int choice_2;
+    int digitalID;
+    char ID[20];
 
+    if ((choice_1 = adminView_main()) == 1){
+        switch (adminView_object()){
+            case 1:
+                printf("请输入要查询的学生信息：\n"
+                       "(例如：20170801 或ChenGuanYu)\n");
+                do {
+                    fflush(stdin);
+                    scanf("%s", ID);
+                    digitalID = dealID(ID);
+                    if (digitalID != 0) {
+                        pNowStu = searchStudent(digitalID);
+                    } else {
+                        pNowStu = searchStuByName(ID);
+                    }
+                    if (pNowStu == NULL) {
+                        printf("学生信息不存在！\n");
+                        break;
+                    } else {
+                        adminView_query(Head + 1, NULL, NULL);
+                    }
+                }while (pNowStu != NULL);
+                break;
+            case 2:
+                adminView_query(Head,NULL,NULL);
+                break;
+            case 3:
+                printf("请输入要查询的教师ID：");
+                do {
+                    fflush(stdin);
+                    scanf("%d", &digitalID);
+                    pNowTea = searchTeacher(digitalID);
+                    if (pNowTea != NULL) {
+                        adminView_query(NULL, TeacherList + 1, NULL);
+                    } else {
+                        printf("无当前教师信息！\n");
+                    }
+                }while (pNowTea != NULL);
+                break;
+            case 4:
+                adminView_query(NULL,TeacherList,NULL);
+                break;
+            case 5:
+                adminView_query(NULL,NULL,CourseList);
+                break;
+            case 6:
+                break;
+            default :
+                printf("输入错误，将返回上一层菜单！\n");
+        }
+    }else if (choice_1 == 2){
+        if((choice_2 = adminView_object()) == 1){
+            switch (adminViewStuOptions()) {
+                case 1://修改学生信息
+                    printf("请输入要修改的学生信息：\n"
+                           "(例如：20170801 或ChenGuanYu)\n");
+                    do {
+                        fflush(stdin);
+                        scanf("%s", ID);
+                        digitalID = dealID(ID);
+                        if (digitalID != 0) {
+                            pNowStu = searchStudent(digitalID);
+                        } else {
+                            pNowStu = searchStuByName(ID);
+                        }
+                        if (pNowStu == NULL){
+                            printf("当前学生信息不存在，将返回上一层菜单\n");
+                            break;
+                        }else {
+                            inputStuInformationLevelUp(pNowStu);
+                        }
+                    } while (pNowStu != NULL);
+                    break;
+                case 2://增加
+                    addStuInformation();
+                    break;
+                case 3://删除
+                    deleteStudentInformation();
+                    break;
+                case 4://修改课程
+                    break;
+                case 5://增加课程
+
+                    break;
+                case 6://删除课程
+                    break;
+                case 7://返回上一级菜单
+                    break;
+                default://输入错误
+                    printf("输入错误，请重新输入！\n");
+            }
+        }
+    }
 }
 
 //学生端界面
@@ -184,7 +280,8 @@ int adminView_main() {
 
     printf("1.查询\n"
            "2.修改\n"
-           "3.退出\n");
+           "3.强制信息完善\n"
+           "4.退出\n");
     fflush(stdin);
     scanf("%d",&choice);
 
@@ -196,17 +293,90 @@ int adminView_object() {
     printf("1.学生\n"
            "2.班级\n"
            "3.教师\n"
-           "4.课程\n"
-           "5.返回上一层菜单\n");
+           "4.教师集体\n"
+           "5.课程\n"
+           "6.返回上一层菜单\n");
     fflush(stdin);
     scanf("%d",&object);
 
     return object;
 }
+//query为查询之意
 void adminView_query(Student *pStu,Teacher *pTea,Course *pCour) {
-    if (pStu != NULL) {
 
+    //object为学生
+    if (pStu != NULL && pStu != Head) {
+        showStuInformation(1);
+        for(int i = 0;pNowStu->course[i] != 0;i++) {
+            pCour = searchCourse(pNowStu->course[i]);
+            if (pCour == NULL){
+                printf("查询学生课程信息失败！");
+            }else{
+                printf("%-8d%20s\t",pCour->Course_ID,pCour->name);
+            }
+            if (pNowStu->teacher[i] != -1){
+                pTea = searchTeacher(pNowStu->teacher[i]);
+                if (pTea == NULL){
+                    printf("无此课程教师信息\n");
+                    pNowStu->teacher[i] = -1;
+                }else{
+                    printf("%s\n",pTea->name);
+                }
+            }else{
+                printf("无此课程教师信息\n");
+            }
+        }
+        //查询学生链表，并以需要的班级输出
+    }else if (pStu != NULL && pStu == Head){
+        int target;
+        char choice;
+
+        do {
+            printf("请输入要查询的班级：\n"
+                   "(2017级8班  201708)\n");
+            fflush(stdin);
+            scanf("%d", &target);
+            target = target * 100 + 1;
+            pNowStu = searchStudent(target);
+            if (pNowStu == NULL){
+                printf("无当前班级信息，请重新输入！\n");
+            }else{
+                judgeClass();
+                showStuInformation(99);
+            }
+            printf("是否继续：(y/n)");
+            fflush(stdin);
+            scanf("%c",&choice);
+        }while ((choice == 'y' || choice == 'Y') && (choice != 'N' && choice != 'n'));
+    }else if (pTea != NULL && pTea != TeacherList){
+        showTeaInformation();
+    }else if (pTea != NULL && pTea == TeacherList){
+        for (int i = 0;(TeacherList + i)->Teacher_ID != 0;i++){
+            pNowTea = (TeacherList + i);
+            showTeaInformation();
+        }
+    }else if (pCour != NULL){
+        int count;
+        for (count = 0;(CourseList + count) != 0;count++){
+            printf("%-8d%20s\n",(CourseList + count)->Course_ID,(CourseList + count)->name);
+        }
+        printf("共%d条记录\n",count);
     }
+}
+//管理员修改的界面
+int adminViewStuOptions(){
+    int choice;
+
+    printf("1.修改基本信息\n"
+           "2.增加基本信息\n"
+           "3.删除学生信息\n"
+           "4.修改学生选课信息\n"
+           "5.增加学生选课信息\n"
+           "6.删除学生选课信息\n"
+           "7.返回上一级\n");
+    scanf("%d",&choice);
+
+    return choice;
 }
 //显示学生信息
 void showStuInformation(int num){
@@ -357,7 +527,7 @@ int weatherCour(char *name){
 void showTeaInformation(){
     printf("教师工号     姓名     所教学科\n");
     printf("%-9d%-20s%-20s\n",pNowTea->Teacher_ID,pNowTea->name,searchCourse(pNowTea->taughtSubjectsID)->name);
-    printf("职称      教龄");
+    printf("职称      教龄\n");
     printf("%-20s%3d\n",pNowTea->rank,pNowTea->teachTime);
 }
 //查询相同课程的学生,有则pNowStu为刚开始相同的学生
@@ -470,7 +640,6 @@ void changeStuLink(Student *pTemp,int function){
 //改变目标学生的信息
 void changeTargetStuInformation() {
     int ID;
-    char choice;
     char inputID[20] = {};
     Student *pTemp = NULL;
 

@@ -333,6 +333,17 @@ void inputStuInformation(Student *pAddStudent){
     }
         pAddStudent->class = 0;
 }
+void inputStuInformationLevelUp(Student *pAddStudent){
+    printf("学生姓名：");
+    fflush(stdin);
+    scanf("%s",pAddStudent->name);
+    printf("学生年龄：");
+    fflush(stdin);
+    scanf("%d",&pAddStudent->age);
+    printf("学生性别：");
+    fflush(stdin);
+    scanf("%c",&pAddStudent->sex);
+}
 //完善学生信息
 void improveStuInformation(Student *pTarget){
     Teacher *pTempTea = NULL;

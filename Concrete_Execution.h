@@ -30,7 +30,10 @@ int teaView_4();
 //管理员界面
 int adminView_main();
 int adminView_object();
-
+//query为查询之意
+void adminView_query(Student *pStu,Teacher *pTea,Course *pCour);
+//管理员修改的界面
+int adminViewStuOptions();
 
 //显示学生信息
 void showStuInformation(int num);
