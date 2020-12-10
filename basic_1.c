@@ -189,14 +189,15 @@ int weatherAdministrator(char *account,char *password){
         sleep(3);
         return 0;
     }else{
+        int count;
         do{
-            fread(p,sizeof(Account),1,fp);
+            count = fread(p,sizeof(Account),1,fp);
             if(strcmp(p->name,account) == 0 && strcmp(p->password,password) == 0){
                 printf("当前管理员%s已登录\n",p->name);
                 fclose(fp);
                 return 1;
             }
-        }while (p != NULL);
+        }while (count == 1);
         fclose(fp);
         printf("账号密码错误，程序3秒后结束\n");
         sleep(3);

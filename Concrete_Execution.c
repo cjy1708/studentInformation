@@ -15,7 +15,7 @@ extern Student *pPastStu;
 int dealID(char *ID){
     int digitalID;
 
-    if (isdigit(ID[0]) == 1 && isdigit(ID[6]) == 1) {
+    if (isdigit(ID[0]) == 1 && isdigit(ID[4]) == 1) {
         digitalID = atoi(ID);
         return digitalID;
     } else {
@@ -173,7 +173,7 @@ void administrator(){
                 case 4://修改课程
                     break;
                 case 5://增加课程
-
+                    chooseCourse();
                     break;
                 case 6://删除课程
                     break;
@@ -438,7 +438,7 @@ void chooseCourse(){
     if(count < 15){
         if (totalCourse > 15) {
             printf("当前已选%d门课,还可选%d门课\n", count, totalCourse - count);
-            printf("为了您的生命着想，最多还可选%d门课\n", 15 - count);
+            printf("为了学生本人的生命着想，最多还可选%d门课\n", 15 - count);
         } else {
             printf("当前已选%d门课,还可选%d门课\n", count, totalCourse - count);
         }
@@ -700,4 +700,71 @@ Student *searchPlace(char *ID){
     }
 
     return NULL;
+}
+
+//管理员层修改、删除、增加学生课程信息,function分别对应0 -1 1
+void AdminChangeStuCourInformation(Student *pStu,int function){
+    int count;
+    int result;
+    char name[20] = {};
+
+    if (function == -1){
+        printf("当前已选：\n");
+        for(count = 0;pStu->course[count] != 0;count++){
+            for(int j = 0;(CourseList+j)->Course_ID != 0;j++){
+                if(pStu->course[count] == (CourseList+j)->Course_ID){
+                    printf("%-8d%20s\t",(CourseList+j)->Course_ID,(CourseList+j)->name);
+                    if (pStu->teacher[count] == -1){
+                        printf("NULL\n");
+                    }else{
+                        printf("%s\n",searchTeacher(pStu->teacher[count])->name);
+                    }
+                    break;
+                }
+            }
+        }
+        printf("当前已有%d节课",count);
+        printf("请输入要删除的课程ID或课程名称\n");
+        do {
+            Course *searchResult;
+
+            fflush(stdin);
+            scanf("%s", name);
+            result = dealID(name);
+            if (result == 0){
+                for (int i = 0;i < 16;i++){
+                    //为了减少运算次数
+                    searchResult = searchCourse(pStu->course[i]);
+                    if (strcmp(searchResult->name,name) == 0){
+                        result = searchResult->Course_ID;
+
+                        printf("课程已删除");
+                        break;
+                    }
+                }
+            }else{
+                for (int i = 0;i < 16;i++){
+                    if (pStu->course[i] == result){
+                        printf("课程已删除");
+                        break;
+                    }
+                }
+            }
+        }while ()
+    }
+}
+
+//删除,增加，修改学生的课程信息并保持序号连续，教师信息也同步更新，function的值-1 1 0
+void changeStuCourOrder(Student *pStu,int function,int courseID){
+    if (function == -1){
+        for (int i = 0,j = i;i < 16;i++,j++){
+            if (pStu->course[j] == courseID){
+                pStu->course[i] = pStu->course[++j];
+                break;
+            }else{
+                pStu->course[i] = pStu->course[j];
+            }
+
+        }
+    }
 }

@@ -21,13 +21,13 @@ int main() {
         exit(EXIT_FAILURE);
     }else if(ID == 1){
         //管理员端口
-
+        administrator();
     }else if(ID <= 20000000){
         //教师端口
-        
+        teacher();
     }else if(ID < 21000000){
         //学生端口
-        stuView();
+        student();
     }
 
     safeFreeAll(CourseList,TeacherList,Head);
